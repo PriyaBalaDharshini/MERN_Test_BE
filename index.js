@@ -7,6 +7,7 @@ const app = express();
 app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -17,7 +18,7 @@ const db = mysql.createConnection({
 app.post("/create", (req, res) => {
     const sql = "INSERT INTO f_Employee (`f_Image`, `f_Name`, `f_Email`, `f_Mobile`, `f_Designation`, `f_Gender`, `f_Course`, `f_CreatedDate`) VALUES (?)";
     const values = [
-        req.body.f_Image,
+        req.body.f_Image || null,
         req.body.f_Name,
         req.body.f_Email,
         req.body.f_Mobile,
@@ -81,7 +82,6 @@ app.get("/all", (req, res) => {
 
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
-
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const sql = `INSERT INTO t_login (f_userName, f_Pwd) VALUES (?, ?)`;
